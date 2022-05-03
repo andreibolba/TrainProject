@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\..\_external\glm;..\..\_external\stb-master;..\..\_external\glfw-3.3.6.bin.WIN32\include\GLFW;..\..\_external\glew-2.2.0\include;..\..\_external\glew-2.1.0\include;..\..\_external\glm\glm;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\_external\glm;..\..\_external\stb-master;..\..\_external\glfw-3.3.6.bin.WIN32\include\GLFW;..\..\_external\glew-2.2.0\include;..\..\_external\glew-2.1.0\include;..\..\_external\glm\glm;C:\Users\cimpi\vcpkg\buildtrees\assimp\src\90204b69df-11eeb21532.clean\include\assimp;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\_external\glew-2.2.0\lib\Release\Win32;..\..\_external\glfw-3.3.6.bin.WIN32\lib-vc2022;..\..\_external\glew-2.1.0\lib\Release\Win32;..\..\_external\glfw-3.3.6.bin.WIN32\lib-vc2019;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -92,6 +92,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -144,10 +145,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="TrainProject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
