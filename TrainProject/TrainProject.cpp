@@ -96,8 +96,9 @@ int main(int argc, char** argv)
 
     std::filesystem::path localPath = std::filesystem::current_path();
  
-    Model ourModel(localPath.string() + "/Resources/train/electrictrain.obj");
-    Model ourModelTest(localPath.string() + "/Resources/train/tracks.obj");
+    Model trainModel(localPath.string() + "/Resources/train/electrictrain.obj");
+    Model railsModel(localPath.string() + "/Resources/train/tracks.obj");
+    Model stationModel(localPath.string() + "/Resources/train/House.obj");
 
     unsigned int vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -146,18 +147,24 @@ int main(int argc, char** argv)
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
 
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        ourModel.Draw(shaderProgram);
+        glm::mat4 modelTrain = glm::mat4(1.0f);
+        modelTrain = glm::translate(modelTrain, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+        modelTrain = glm::scale(modelTrain, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelTrain));
+        trainModel.Draw(shaderProgram);
 
 
-        glm::mat4 modelTest = glm::mat4(1.0f);
-        modelTest = glm::translate(modelTest, glm::vec3(0.0f, -0.2f, 0.0f)); 
-        modelTest = glm::scale(modelTest, glm::vec3(0.002f, 0.001f, 0.005f));	
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelTest));
-        ourModelTest.Draw(shaderProgram);
+        glm::mat4 tracksModel = glm::mat4(1.0f);
+        tracksModel = glm::translate(tracksModel, glm::vec3(0.0f, -0.2f, 0.0f)); 
+        tracksModel = glm::scale(tracksModel, glm::vec3(0.002f, 0.001f, 0.005f));	
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(tracksModel));
+        railsModel.Draw(shaderProgram);
+
+        glm::mat4 buildingModel = glm::mat4(1.0f);
+        buildingModel = glm::translate(buildingModel, glm::vec3(15.0f, 0.0f, 0.0f));
+        buildingModel = glm::scale(buildingModel, glm::vec3(1.0f, 1.0f, 1.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(buildingModel));
+        stationModel.Draw(shaderProgram);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
