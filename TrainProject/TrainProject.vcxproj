@@ -29,7 +29,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\..\_external\glm;..\..\_external\stb-master;..\..\_external\glfw-3.3.6.bin.WIN32\include\GLFW;..\..\_external\glew-2.2.0\include;..\..\_external\glew-2.1.0\include;..\..\_external\glm\glm;C:\Users\cimpi\vcpkg\buildtrees\assimp\src\90204b69df-11eeb21532.clean\include\assimp;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\_external\glm;..\..\_external\stb-master;..\..\_external\glfw-3.3.6.bin.WIN32\include\GLFW;..\..\_external\glew-2.2.0\include;..\..\_external\glew-2.1.0\include;..\..\_external\glm\glm;C:\Users\User\vcpkg\buildtrees\assimp\src\90204b69df-11eeb21532.clean\include\assimp;C:\Users\cimpi\vcpkg\buildtrees\assimp\src\90204b69df-11eeb21532.clean\include\assimp;$(IncludePath)</IncludePath>
     <LibraryPath>..\..\_external\glew-2.2.0\lib\Release\Win32;..\..\_external\glfw-3.3.6.bin.WIN32\lib-vc2022;..\..\_external\glew-2.1.0\lib\Release\Win32;..\..\_external\glfw-3.3.6.bin.WIN32\lib-vc2019;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

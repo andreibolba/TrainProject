@@ -97,6 +97,7 @@ int main(int argc, char** argv)
     std::filesystem::path localPath = std::filesystem::current_path();
  
     Model ourModel(localPath.string() + "/Resources/train/electrictrain.obj");
+    Model ourModelTest(localPath.string() + "/Resources/train/tracks.obj");
 
     unsigned int vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -108,11 +109,13 @@ int main(int argc, char** argv)
     glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
     glCompileShader(fragmentShader);
 
+    //works for multiple objects
     unsigned int shaderProgram;
     shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
+
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
@@ -148,6 +151,13 @@ int main(int argc, char** argv)
         model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         ourModel.Draw(shaderProgram);
+
+
+        glm::mat4 modelTest = glm::mat4(1.0f);
+        modelTest = glm::translate(modelTest, glm::vec3(0.0f, -0.2f, 0.0f)); 
+        modelTest = glm::scale(modelTest, glm::vec3(0.002f, 0.001f, 0.005f));	
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelTest));
+        ourModelTest.Draw(shaderProgram);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
