@@ -74,7 +74,7 @@ int main(int argc, char** argv)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Train Project", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(1280, 720, "Train Project", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -99,6 +99,7 @@ int main(int argc, char** argv)
     Model trainModel(localPath.string() + "/Resources/train/electrictrain.obj");
     Model railsModel(localPath.string() + "/Resources/train/tracks.obj");
     Model stationModel(localPath.string() + "/Resources/train/House.obj");
+    Model fieldModel(localPath.string() + "/Resources/train/field.obj");
 
     unsigned int vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -165,6 +166,13 @@ int main(int argc, char** argv)
         buildingModel = glm::scale(buildingModel, glm::vec3(1.0f, 1.0f, 1.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(buildingModel));
         stationModel.Draw(shaderProgram);
+
+        glm::mat4 modelField = glm::mat4(1.0f);
+        modelField = glm::rotate(modelField, (float)glm::radians(90.0f), glm::vec3(5.0f, 0.9f, -0.7f));
+        modelField = glm::translate(modelField, glm::vec3(50.0f, -400.0f, -13.0f));
+        modelField = glm::scale(modelField, glm::vec3(16.0f, 16.0f, 0.1f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelField));
+        fieldModel.Draw(shaderProgram);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
