@@ -82,6 +82,7 @@
     <LinkIncremental>true</LinkIncremental>
     <ExecutablePath>..\..\_external\glew-2.1.0\include;..\..\_external\glm;..\..\_external\glfw-3.3.6.bin.WIN32\include\GLFW;..\..\_external\stb-master;..\..\_external\glm\glm;$(ExecutablePath)</ExecutablePath>
     <LibraryPath>..\..\_external\glew-2.1.0\lib\Release\Win32;..\..\_external\glfw-3.3.6.bin.WIN32\lib-vc2019;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\bogda\vcpkg\buildtrees\assimp\src\90204b69df-11eeb21532.clean\include\assimp;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -147,12 +148,22 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="TrainProject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="Shader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="skybox.fs">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
+    <None Include="skybox.vs">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
