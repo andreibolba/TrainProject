@@ -176,6 +176,7 @@ int main(int argc, char** argv)
 	Model railsModel(localPath.string() + "/Resources/train/tracks.obj");
 	Model stationModel(localPath.string() + "/Resources/train/House.obj");
 	Model fieldModel(localPath.string() + "/Resources/train/field.obj");
+	Model brasovSignModel(localPath.string() + "/Resources/train/ExitSign_HiPoly.obj");
 
 	unsigned int vertexShader;
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -264,6 +265,14 @@ int main(int argc, char** argv)
 		modelField = glm::scale(modelField, glm::vec3(16.0f, 16.0f, 0.1f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelField));
 		fieldModel.Draw(shaderProgram);
+
+		glm::mat4 signBrasovModel = glm::mat4(1.0f);
+		//glMatrixMode(GL_MODELVIEW);
+		signBrasovModel = glm::rotate(signBrasovModel, (float)glm::radians(270.0f), glm::vec3(0.0f, 90.0f, 0.0f));
+		signBrasovModel = glm::translate(signBrasovModel, glm::vec3(0.3f, 7.0f, -7.0f));
+		signBrasovModel = glm::scale(signBrasovModel, glm::vec3(2.0f, 1.0f, 1.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(signBrasovModel));
+		brasovSignModel.Draw(shaderProgram);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
