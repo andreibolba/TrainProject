@@ -70,6 +70,34 @@ const char* vertexShaderSource = "#version 330 core\n"
 "   TexCoord = vec2(aTexCoord.x, aTexCoord.y);\n"
 "}\0";
 
+enum Movement {
+	Move,
+	Stop,
+	Reset
+};
+
+Movement moveTrain = Movement::Reset;
+float trainPosition = -15.0f;
+
+void moveTrainFunction() {
+	float fIncrement = 0.05f;
+	switch (moveTrain)
+	{
+	case Move:
+		trainPosition -= fIncrement;
+		break;
+	case Stop:
+
+		break;
+	case Reset:
+		trainPosition = -0.7f;
+		break;
+	default:
+		break;
+	}
+}
+
+
 int main(int argc, char** argv)
 {
 	glfwInit();
@@ -183,6 +211,8 @@ int main(int argc, char** argv)
 
 	vector<Model> sign=vector<Model>{brasovSignModel,ploiestiSignModel,bucurestSignModel};
 
+	
+
 	unsigned int vertexShader;
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
@@ -244,9 +274,9 @@ int main(int argc, char** argv)
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-
+		
 		glm::mat4 modelTrain = glm::mat4(1.0f);
-		modelTrain = glm::translate(modelTrain, glm::vec3(0.0f, -0.7f, -15.0f)); // translate it down so it's at the center of the scene
+		modelTrain = glm::translate(modelTrain, glm::vec3(0.0f, -0.7f, trainPosition)); // translate it down so it's at the center of the scene
 		modelTrain = glm::scale(modelTrain, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelTrain));
 		trainModel.Draw(shaderProgram);
@@ -300,7 +330,7 @@ int main(int argc, char** argv)
 			yField += 160.0f;
 		}
 
-
+		moveTrainFunction();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
@@ -319,6 +349,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
 }
+
 
 void processInput(GLFWwindow* window, bool& day, std::vector<std::string>& faces, std::string& textureFolder, unsigned int& cubemapTexture)
 {
@@ -341,6 +372,13 @@ void processInput(GLFWwindow* window, bool& day, std::vector<std::string>& faces
 	{
 		day = false;
 		setFaces(day, faces, textureFolder, cubemapTexture);
+	}
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+		moveTrain = Movement::Move;
+	}
+		
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+		moveTrain = Movement::Stop;
 	}
 
 }
