@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <iostream>
 
 #include <GL/glew.h>
 #include "Model.h"
@@ -177,6 +178,10 @@ int main(int argc, char** argv)
 	Model stationModel(localPath.string() + "/Resources/train/House.obj");
 	Model fieldModel(localPath.string() + "/Resources/train/field.obj");
 	Model brasovSignModel(localPath.string() + "/Resources/train/ExitSign_HiPoly.obj");
+	Model ploiestiSignModel(localPath.string() + "/Resources/train/ExitSign_HiPoly -Ploiesti.obj");
+	Model bucurestSignModel(localPath.string() + "/Resources/train/ExitSign_HiPoly -Bucuresti.obj");
+
+	vector<Model> sign=vector<Model>{brasovSignModel,ploiestiSignModel,bucurestSignModel};
 
 	unsigned int vertexShader;
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -207,7 +212,7 @@ int main(int argc, char** argv)
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		processInput(window,day,faces,textureFolder,cubemapTexture);
+		processInput(window, day, faces, textureFolder, cubemapTexture);
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -241,38 +246,60 @@ int main(int argc, char** argv)
 
 
 		glm::mat4 modelTrain = glm::mat4(1.0f);
-		modelTrain = glm::translate(modelTrain, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+		modelTrain = glm::translate(modelTrain, glm::vec3(0.0f, -0.7f, -15.0f)); // translate it down so it's at the center of the scene
 		modelTrain = glm::scale(modelTrain, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelTrain));
 		trainModel.Draw(shaderProgram);
 
+		float x = -50.0f;
+		for (int i = 0; i < 5; i++)
+		{
+			glm::mat4 tracksModel = glm::mat4(1.0f);
+			tracksModel = glm::translate(tracksModel, glm::vec3(0.0f, -0.9f, x));
+			tracksModel = glm::scale(tracksModel, glm::vec3(0.002f, 0.001f, 0.005f));
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(tracksModel));
+			railsModel.Draw(shaderProgram);
+			x -= 150.0f;
+		}
 
-		glm::mat4 tracksModel = glm::mat4(1.0f);
-		tracksModel = glm::translate(tracksModel, glm::vec3(0.0f, -0.2f, 0.0f));
-		tracksModel = glm::scale(tracksModel, glm::vec3(0.002f, 0.001f, 0.005f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(tracksModel));
-		railsModel.Draw(shaderProgram);
+		x = 0.0f;
+		float signX = 0.3f;
+		float position = 0.0f;
+		float signPosition = 7.0f;
+		for (int i = 0; i < 3; i++) {
+			glm::mat4 buildingModel = glm::mat4(1.0f);
+			buildingModel = glm::translate(buildingModel, glm::vec3(15.0f, position, x));
+			buildingModel = glm::scale(buildingModel, glm::vec3(1.0f, 1.0f, 1.0f));
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(buildingModel));
+			stationModel.Draw(shaderProgram);
 
-		glm::mat4 buildingModel = glm::mat4(1.0f);
-		buildingModel = glm::translate(buildingModel, glm::vec3(15.0f, 0.0f, 0.0f));
-		buildingModel = glm::scale(buildingModel, glm::vec3(1.0f, 1.0f, 1.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(buildingModel));
-		stationModel.Draw(shaderProgram);
+			glm::mat4 signBrasovModel = glm::mat4(1.0f);
+			//glMatrixMode(GL_MODELVIEW);
+			signBrasovModel = glm::rotate(signBrasovModel, (float)glm::radians(270.0f), glm::vec3(0.0f, 90.0f, 0.0));
+			signBrasovModel = glm::translate(signBrasovModel, glm::vec3(signX, signPosition, -7.0f));
+			signBrasovModel = glm::scale(signBrasovModel, glm::vec3(2.0f, 1.0f, 1.0f));
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(signBrasovModel));
+			sign[i].Draw(shaderProgram);
 
-		glm::mat4 modelField = glm::mat4(1.0f);
-		modelField = glm::rotate(modelField, (float)glm::radians(90.0f), glm::vec3(5.0f, 0.9f, -0.7f));
-		modelField = glm::translate(modelField, glm::vec3(50.0f, -400.0f, -13.0f));
-		modelField = glm::scale(modelField, glm::vec3(16.0f, 16.0f, 0.1f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelField));
-		fieldModel.Draw(shaderProgram);
+			x -= 350.0f;
+			position -= 0.4f;
+			signX -= 349.95f;
+			signPosition -= 0.4f;
+		}
 
-		glm::mat4 signBrasovModel = glm::mat4(1.0f);
-		//glMatrixMode(GL_MODELVIEW);
-		signBrasovModel = glm::rotate(signBrasovModel, (float)glm::radians(270.0f), glm::vec3(0.0f, 90.0f, 0.0f));
-		signBrasovModel = glm::translate(signBrasovModel, glm::vec3(0.3f, 7.0f, -7.0f));
-		signBrasovModel = glm::scale(signBrasovModel, glm::vec3(2.0f, 1.0f, 1.0f));
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(signBrasovModel));
-		brasovSignModel.Draw(shaderProgram);
+		float xField = -400.0f, yField = 100.0f;
+		for (int i = 0; i < 2;i++) {
+			glm::mat4 modelField = glm::mat4(1.0f);
+			modelField = glm::rotate(modelField, (float)glm::radians(91.0575f), glm::vec3(5.0f, 0.8f, -0.7f));
+			modelField = glm::translate(modelField, glm::vec3(yField, xField, -13.0f));
+			modelField = glm::scale(modelField, glm::vec3(16.0f, 16.0f, 0.1f));
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelField));
+			fieldModel.Draw(shaderProgram);
+
+			xField -= 460.0;
+			yField += 160.0f;
+		}
+
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
