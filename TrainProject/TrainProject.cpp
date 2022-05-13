@@ -36,10 +36,12 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 unsigned int loadCubemap(std::vector<std::string> faces);
 void setFaces(bool& day, std::vector<std::string>& faces, std::string& textureFolder, unsigned int& cubemapTexture);
 
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+//Camera camera(glm::vec3(0.0f, 3.0f, -36.0f));
+Camera camera(glm::vec3(-40.0f, 10.0f, 10.0f),glm::vec3(0.0f,1.0f,0.0f),0.0f,-10.0f);
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
+bool cameraLock = false;
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -226,7 +228,6 @@ int main(int argc, char** argv)
 	skyboxShader.use();
 	skyboxShader.setInt("skybox", 0);
 
-
 	Model trainModel(localPath.string() + "/Resources/train/electrictrain.obj");
 	Model railsModel(localPath.string() + "/Resources/train/tracks.obj");
 	Model stationModel(localPath.string() + "/Resources/train/House.obj");
@@ -236,8 +237,6 @@ int main(int argc, char** argv)
 	Model bucurestSignModel(localPath.string() + "/Resources/train/ExitSign_HiPoly -Bucuresti.obj");
 
 	vector<Model> sign = vector<Model>{ brasovSignModel,ploiestiSignModel,bucurestSignModel };
-
-
 
 	unsigned int vertexShader;
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -402,9 +401,12 @@ void processInput(GLFWwindow* window, bool& day, std::vector<std::string>& faces
 		moveTrain = Movement::Move;
 		canGo = true;
 	}
-
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
 		moveTrain = Movement::Stop;
+	}
+	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
+		cameraLock = true;
+		camera.SetCameraPosition(glm::vec3(0.0f, 3.0f, -36.0f));
 	}
 
 }

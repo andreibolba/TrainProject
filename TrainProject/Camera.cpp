@@ -64,6 +64,11 @@ void Camera::ProcessMouseScroll(float yoffset)
         Zoom = 45.0f;
 }
 
+void Camera::SetCameraPosition(glm::vec3 position)
+{
+    Position = position;
+}
+
 void Camera::updateCameraVectors()
 {
     glm::vec3 front;
