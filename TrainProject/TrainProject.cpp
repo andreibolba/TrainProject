@@ -83,7 +83,6 @@ float trainPosition = -15.0f;
 bool canGo = false;
 
 float incrementNumber() {
-	cout << trainPosition << " " << moveTrain << "\n";
 	if (trainPosition >= -20.0f)
 		return 0.06f;
 	if (trainPosition >= -350.5f && trainPosition <= -350.4f && moveTrain == Movement::Move && canGo == false)
@@ -235,8 +234,17 @@ int main(int argc, char** argv)
 	Model brasovSignModel(localPath.string() + "/Resources/train/ExitSign_HiPoly.obj");
 	Model ploiestiSignModel(localPath.string() + "/Resources/train/ExitSign_HiPoly -Ploiesti.obj");
 	Model bucurestSignModel(localPath.string() + "/Resources/train/ExitSign_HiPoly -Bucuresti.obj");
+	Model men(localPath.string() + "/Resources/men/source/model_mesh.obj");
+	//Model women(localPath.string() + "/Resources/woman/source/ExitSign_HiPoly -Bucuresti.obj");
 
 	vector<Model> sign = vector<Model>{ brasovSignModel,ploiestiSignModel,bucurestSignModel };
+	vector<glm::vec3>persons = vector<glm::vec3>{
+		glm::vec3(3.0f, 2.5f, -5.5f),
+		glm::vec3(2.9f, 2.5f, -7.2f),
+		glm::vec3(1.2f, 2.5f, -5.0f),
+		glm::vec3(2.2f, 2.5f, -6.5f)
+	};
+
 
 	unsigned int vertexShader;
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -306,6 +314,18 @@ int main(int argc, char** argv)
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelTrain));
 		trainModel.Draw(shaderProgram);
 
+		for (int i = 0; i < persons.size(); i++)
+		{
+			glm::mat4 person = glm::mat4(1.0f);
+			person = glm::rotate(person, (float)glm::radians(270.0f), glm::vec3(15.0f, 90.0f, 0.0f));
+			person = glm::translate(person, persons[i]); // translate it down so it's at the center of the scene
+			person = glm::scale(person, glm::vec3(1.3f, 1.3f, 1.3f));	// it's a bit too big for our scene, so scale it down
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(person));
+			men.Draw(shaderProgram);
+		}
+
+
+
 		float x = -50.0f;
 		for (int i = 0; i < 5; i++)
 		{
@@ -318,12 +338,12 @@ int main(int argc, char** argv)
 		}
 
 		x = 0.0f;
-		float signX = 0.3f;
+		float signX = .3f;
 		float position = 0.0f;
 		float signPosition = 7.0f;
 		for (int i = 0; i < 3; i++) {
 			glm::mat4 buildingModel = glm::mat4(1.0f);
-			buildingModel = glm::translate(buildingModel, glm::vec3(15.0f, position, x));
+			buildingModel = glm::translate(buildingModel, glm::vec3(20.0f, position, x));
 			buildingModel = glm::scale(buildingModel, glm::vec3(1.0f, 1.0f, 1.0f));
 			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(buildingModel));
 			stationModel.Draw(shaderProgram);
@@ -331,7 +351,7 @@ int main(int argc, char** argv)
 			glm::mat4 signBrasovModel = glm::mat4(1.0f);
 			//glMatrixMode(GL_MODELVIEW);
 			signBrasovModel = glm::rotate(signBrasovModel, (float)glm::radians(270.0f), glm::vec3(0.0f, 90.0f, 0.0));
-			signBrasovModel = glm::translate(signBrasovModel, glm::vec3(signX, signPosition, -7.0f));
+			signBrasovModel = glm::translate(signBrasovModel, glm::vec3(signX, signPosition, -12.0f));
 			signBrasovModel = glm::scale(signBrasovModel, glm::vec3(2.0f, 1.0f, 1.0f));
 			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(signBrasovModel));
 			sign[i].Draw(shaderProgram);
@@ -354,6 +374,10 @@ int main(int argc, char** argv)
 			xField -= 460.0;
 			yField += 160.0f;
 		}
+		
+
+		renderScene(shadowMappingDepthShader);
+
 		moveTrainFunction();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
