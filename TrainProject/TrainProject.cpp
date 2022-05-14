@@ -234,7 +234,7 @@ int main(int argc, char** argv)
 	Model brasovSignModel(localPath.string() + "/Resources/train/ExitSign_HiPoly.obj");
 	Model ploiestiSignModel(localPath.string() + "/Resources/train/ExitSign_HiPoly -Ploiesti.obj");
 	Model bucurestSignModel(localPath.string() + "/Resources/train/ExitSign_HiPoly -Bucuresti.obj");
-	Model men(localPath.string() + "/Resources/men/source/model_mesh.obj");
+	Model men(localPath.string() + "/Resources/train/Humano_01Business_01_30K.obj");
 	//Model women(localPath.string() + "/Resources/woman/source/ExitSign_HiPoly -Bucuresti.obj");
 	Model benchModel(localPath.string() + "/Resources/train/Bench_HighRes.obj");
 	Model podeaModel(localPath.string() + "/Resources/train/plank 1 model.obj");
@@ -334,7 +334,7 @@ int main(int argc, char** argv)
 			glm::mat4 person = glm::mat4(1.0f);
 			person = glm::rotate(person, (float)glm::radians(270.0f), glm::vec3(15.0f, 90.0f, 0.0f));
 			person = glm::translate(person, persons[i]); 
-			person = glm::scale(person, glm::vec3(1.3f, 1.3f, 1.3f));
+			person = glm::scale(person, glm::vec3(0.01f, 0.01f, 0.01f));
 			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(person));
 			men.Draw(shaderProgram);
 		}
