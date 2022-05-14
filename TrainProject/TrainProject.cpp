@@ -236,6 +236,8 @@ int main(int argc, char** argv)
 	Model bucurestSignModel(localPath.string() + "/Resources/train/ExitSign_HiPoly -Bucuresti.obj");
 	Model men(localPath.string() + "/Resources/men/source/model_mesh.obj");
 	//Model women(localPath.string() + "/Resources/woman/source/ExitSign_HiPoly -Bucuresti.obj");
+	Model benchModel(localPath.string() + "/Resources/train/Bench_HighRes.obj");
+	Model podeaModel(localPath.string() + "/Resources/train/plank 1 model.obj");
 
 	vector<Model> sign = vector<Model>{ brasovSignModel,ploiestiSignModel,bucurestSignModel };
 	vector<glm::vec3>persons = vector<glm::vec3>{
@@ -309,17 +311,30 @@ int main(int argc, char** argv)
 
 
 		glm::mat4 modelTrain = glm::mat4(1.0f);
-		modelTrain = glm::translate(modelTrain, glm::vec3(0.0f, -0.7f, trainPosition)); // translate it down so it's at the center of the scene
-		modelTrain = glm::scale(modelTrain, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+		modelTrain = glm::translate(modelTrain, glm::vec3(0.0f, -0.7f, trainPosition)); 
+		modelTrain = glm::scale(modelTrain, glm::vec3(1.0f, 1.0f, 1.0f));	
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelTrain));
 		trainModel.Draw(shaderProgram);
+
+		glm::mat4 bench = glm::mat4(1.0f);
+		bench = glm::rotate(bench, (float)glm::radians(180.0f), glm::vec3(0.0f, 90.0f, 0.0));
+		bench = glm::translate(bench, glm::vec3(-14.5f, -0.7f, 5.8f));
+		bench = glm::scale(bench, glm::vec3(0.02f, 0.02f, 0.02f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(bench));
+		benchModel.Draw(shaderProgram);
+
+		glm::mat4 modelPodea = glm::mat4(1.0f);
+		modelPodea = glm::translate(modelPodea, glm::vec3(0.0f, 1.0f, trainPosition)); 
+		modelPodea = glm::scale(modelPodea, glm::vec3(2.1f, 0.0f, 4.2f));	
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelPodea));
+		podeaModel.Draw(shaderProgram);
 
 		for (int i = 0; i < persons.size(); i++)
 		{
 			glm::mat4 person = glm::mat4(1.0f);
 			person = glm::rotate(person, (float)glm::radians(270.0f), glm::vec3(15.0f, 90.0f, 0.0f));
-			person = glm::translate(person, persons[i]); // translate it down so it's at the center of the scene
-			person = glm::scale(person, glm::vec3(1.3f, 1.3f, 1.3f));	// it's a bit too big for our scene, so scale it down
+			person = glm::translate(person, persons[i]); 
+			person = glm::scale(person, glm::vec3(1.3f, 1.3f, 1.3f));
 			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(person));
 			men.Draw(shaderProgram);
 		}
@@ -375,8 +390,6 @@ int main(int argc, char** argv)
 			yField += 160.0f;
 		}
 		
-
-		renderScene(shadowMappingDepthShader);
 
 		moveTrainFunction();
 		glfwSwapBuffers(window);
