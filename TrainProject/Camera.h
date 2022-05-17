@@ -42,6 +42,9 @@ public:
     void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true);
     void ProcessMouseScroll(float yoffset);
     void SetCameraPosition(glm::vec3 position);
+    void SetCameraYaw(float yaw);
+    void SetCameraPitch(float pitch);
+    void IncrementCameraPosition(float increment);
 
 private:
 

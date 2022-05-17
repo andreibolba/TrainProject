@@ -37,7 +37,7 @@ unsigned int loadCubemap(std::vector<std::string> faces);
 void setFaces(bool& day, std::vector<std::string>& faces, std::string& textureFolder, unsigned int& cubemapTexture);
 
 //Camera camera(glm::vec3(0.0f, 3.0f, -36.0f));
-Camera camera(glm::vec3(-40.0f, 10.0f, 10.0f),glm::vec3(0.0f,1.0f,0.0f),0.0f,-10.0f);
+Camera camera(glm::vec3(-40.0f, 10.0f, 10.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, -10.0f);
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -112,6 +112,7 @@ void moveTrainFunction() {
 	{
 	case Move:
 		trainPosition -= fIncrement;
+		camera.IncrementCameraPosition(fIncrement);
 		break;
 	case Stop:
 
@@ -312,15 +313,15 @@ int main(int argc, char** argv)
 
 
 		glm::mat4 modelTrain = glm::mat4(1.0f);
-		modelTrain = glm::translate(modelTrain, glm::vec3(0.0f, -0.7f, trainPosition)); 
-		modelTrain = glm::scale(modelTrain, glm::vec3(1.0f, 1.0f, 1.0f));	
+		modelTrain = glm::translate(modelTrain, glm::vec3(0.0f, -0.7f, trainPosition));
+		modelTrain = glm::scale(modelTrain, glm::vec3(1.0f, 1.0f, 1.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelTrain));
 		trainModel.Draw(shaderProgram);
 
 		for (int i = 1; i < 25; i++)
 		{
 			glm::mat4 modelCopac = glm::mat4(1.0f);
-			modelCopac = glm::translate(modelCopac, glm::vec3(10.0f, -0.7f, i*-30.0f));
+			modelCopac = glm::translate(modelCopac, glm::vec3(10.0f, -0.7f, i * -30.0f));
 			modelCopac = glm::scale(modelCopac, glm::vec3(0.4f, 0.4f, 0.4f));
 			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelCopac));
 			copac.Draw(shaderProgram);
@@ -334,8 +335,8 @@ int main(int argc, char** argv)
 		benchModel.Draw(shaderProgram);
 
 		glm::mat4 modelPodea = glm::mat4(1.0f);
-		modelPodea = glm::translate(modelPodea, glm::vec3(0.0f, 1.0f, trainPosition)); 
-		modelPodea = glm::scale(modelPodea, glm::vec3(2.1f, 0.0f, 4.2f));	
+		modelPodea = glm::translate(modelPodea, glm::vec3(0.0f, 1.0f, trainPosition));
+		modelPodea = glm::scale(modelPodea, glm::vec3(2.1f, 0.0f, 4.2f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelPodea));
 		podeaModel.Draw(shaderProgram);
 
@@ -343,7 +344,7 @@ int main(int argc, char** argv)
 		{
 			glm::mat4 person = glm::mat4(1.0f);
 			person = glm::rotate(person, (float)glm::radians(270.0f), glm::vec3(15.0f, 90.0f, 0.0f));
-			person = glm::translate(person, persons[i]); 
+			person = glm::translate(person, persons[i]);
 			person = glm::scale(person, glm::vec3(0.01f, 0.01f, 0.01f));
 			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(person));
 			men.Draw(shaderProgram);
@@ -399,7 +400,7 @@ int main(int argc, char** argv)
 			xField -= 460.0;
 			yField += 160.0f;
 		}
-		
+
 
 		moveTrainFunction();
 		glfwSwapBuffers(window);
@@ -426,15 +427,15 @@ void processInput(GLFWwindow* window, bool& day, std::vector<std::string>& faces
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && cameraLock == false)
 		camera.ProcessKeyboard(FORWARD, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && cameraLock == false)
 		camera.ProcessKeyboard(BACKWARD, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS && cameraLock == false)
 		camera.ProcessKeyboard(LEFT, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && cameraLock == false)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
+	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS && cameraLock == false)
 	{
 		day = true;
 		setFaces(day, faces, textureFolder, cubemapTexture);
@@ -451,11 +452,27 @@ void processInput(GLFWwindow* window, bool& day, std::vector<std::string>& faces
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
 		moveTrain = Movement::Stop;
 	}
+	//first person, locked
 	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
 		cameraLock = true;
-		camera.SetCameraPosition(glm::vec3(0.0f, 3.0f, -36.0f));
+		camera.SetCameraPosition(glm::vec3(0.0f, 3.0f, trainPosition-35.f));
+		camera.SetCameraYaw(-92.f);
+		camera.SetCameraPitch(0.f);
 	}
-
+	//camera from behind, locked
+	if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS) {
+		cameraLock = true;
+		camera.SetCameraPosition(glm::vec3(-20.f, 10.f, trainPosition+50.f));
+		camera.SetCameraYaw(-60.f);
+		camera.SetCameraPitch(-10.f);
+	}
+	//free following camera
+	if (glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS) {
+		cameraLock = false;
+		camera.SetCameraPosition(glm::vec3(-40.f, 10.f, trainPosition + 10.f));
+		camera.SetCameraYaw(0.f);
+		camera.SetCameraPitch(-10.f);
+	}
 }
 
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
@@ -475,13 +492,14 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 
 	lastX = xpos;
 	lastY = ypos;
-
-	camera.ProcessMouseMovement(xoffset, yoffset);
+	if (cameraLock == false)
+		camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	camera.ProcessMouseScroll(static_cast<float>(yoffset));
+	if (cameraLock == false)
+		camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
 
 unsigned int loadCubemap(std::vector<std::string> faces)

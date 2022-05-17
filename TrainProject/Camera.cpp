@@ -69,6 +69,23 @@ void Camera::SetCameraPosition(glm::vec3 position)
     Position = position;
 }
 
+void Camera::SetCameraYaw(float yaw)
+{
+    Yaw = yaw;
+    updateCameraVectors();
+}
+
+void Camera::SetCameraPitch(float pitch)
+{
+    Pitch = pitch;
+    updateCameraVectors();
+}
+
+void Camera::IncrementCameraPosition(float increment)
+{
+    Position[2] -= increment;
+}
+
 void Camera::updateCameraVectors()
 {
     glm::vec3 front;
