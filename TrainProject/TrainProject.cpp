@@ -3,6 +3,8 @@
 #include <math.h>
 #include <iostream>
 
+#include<irrKlang.h>
+
 #include <GL/glew.h>
 #include "Model.h"
 #include <filesystem>
@@ -25,6 +27,38 @@
 #pragma comment (lib, "OpenGL32.lib")
 #pragma comment (lib, "glew32.lib")
 #pragma comment (lib, "glfw3dll.lib")
+#pragma comment (lib, "irrKlang.lib")
+
+using namespace irrklang;
+
+ISoundEngine* SoundEngine = createIrrKlangDevice();
+ISoundEngine* TrainSoundEngine = createIrrKlangDevice();
+void SetOutsideSound(bool day)
+{
+	SoundEngine->removeAllSoundSources();
+	if (day)
+	{
+		SoundEngine->play2D("Resources/audio/day.mp3", true);
+		SoundEngine->setSoundVolume(0.6);
+	}
+	else
+	{
+		SoundEngine->play2D("Resources/audio/night.mp3", true);
+		SoundEngine->setSoundVolume(0.2);
+	}
+}
+
+void setTrainSound(bool move) {
+	TrainSoundEngine->removeAllSoundSources();
+	if (move) {
+		TrainSoundEngine->play2D("Resources/audio/train.wav", true);
+		TrainSoundEngine->setSoundVolume(0.2);
+	}
+	else {
+		TrainSoundEngine->removeAllSoundSources();
+		TrainSoundEngine->setAllSoundsPaused();
+	}
+}
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -88,10 +122,12 @@ float incrementNumber() {
 	if (trainPosition >= -350.5f && trainPosition <= -350.4f && moveTrain == Movement::Move && canGo == false)
 	{
 		moveTrain = Movement::Stop;
+		setTrainSound(false);
 		return 0.00f;
 	}
 	if (trainPosition <= -692.4f)
 	{
+		setTrainSound(false);
 		moveTrain = Movement::Stop;
 		return 0.00f;
 	}
@@ -272,7 +308,7 @@ int main(int argc, char** argv)
 	glDeleteShader(fragmentShader);
 
 	bool day = true;
-
+	SetOutsideSound(day);
 	while (!glfwWindowShouldClose(window))
 	{
 		float currentFrame = static_cast<float>(glfwGetTime());
@@ -401,7 +437,6 @@ int main(int argc, char** argv)
 			yField += 160.0f;
 		}
 
-
 		moveTrainFunction();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -435,34 +470,39 @@ void processInput(GLFWwindow* window, bool& day, std::vector<std::string>& faces
 		camera.ProcessKeyboard(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && cameraLock == false)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS )
+	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS)
 	{
 		day = true;
 		setFaces(day, faces, textureFolder, cubemapTexture);
+		SetOutsideSound(day);
 	}
 	if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS)
 	{
 		day = false;
 		setFaces(day, faces, textureFolder, cubemapTexture);
+		SetOutsideSound(day);
 	}
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
 		moveTrain = Movement::Move;
 		canGo = true;
+		setTrainSound(true);
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
 		moveTrain = Movement::Stop;
+		setTrainSound(false);
+		
 	}
 	//first person, locked
 	if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
 		cameraLock = true;
-		camera.SetCameraPosition(glm::vec3(0.0f, 3.0f, trainPosition-35.f));
+		camera.SetCameraPosition(glm::vec3(0.0f, 3.0f, trainPosition - 35.f));
 		camera.SetCameraYaw(-92.f);
 		camera.SetCameraPitch(0.f);
 	}
 	//camera from behind, locked
 	if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS) {
 		cameraLock = true;
-		camera.SetCameraPosition(glm::vec3(-20.f, 10.f, trainPosition+50.f));
+		camera.SetCameraPosition(glm::vec3(-20.f, 10.f, trainPosition + 50.f));
 		camera.SetCameraYaw(-60.f);
 		camera.SetCameraPitch(-10.f);
 	}
