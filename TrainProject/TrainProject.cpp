@@ -238,6 +238,7 @@ int main(int argc, char** argv)
 	//Model women(localPath.string() + "/Resources/woman/source/ExitSign_HiPoly -Bucuresti.obj");
 	Model benchModel(localPath.string() + "/Resources/train/Bench_HighRes.obj");
 	Model podeaModel(localPath.string() + "/Resources/train/plank 1 model.obj");
+	Model copac(localPath.string() + "/Resources/train/Tree.obj");
 
 	vector<Model> sign = vector<Model>{ brasovSignModel,ploiestiSignModel,bucurestSignModel };
 	vector<glm::vec3>persons = vector<glm::vec3>{
@@ -315,6 +316,15 @@ int main(int argc, char** argv)
 		modelTrain = glm::scale(modelTrain, glm::vec3(1.0f, 1.0f, 1.0f));	
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelTrain));
 		trainModel.Draw(shaderProgram);
+
+		for (int i = 1; i < 25; i++)
+		{
+			glm::mat4 modelCopac = glm::mat4(1.0f);
+			modelCopac = glm::translate(modelCopac, glm::vec3(10.0f, -0.7f, i*-30.0f));
+			modelCopac = glm::scale(modelCopac, glm::vec3(0.4f, 0.4f, 0.4f));
+			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelCopac));
+			copac.Draw(shaderProgram);
+		}
 
 		glm::mat4 bench = glm::mat4(1.0f);
 		bench = glm::rotate(bench, (float)glm::radians(180.0f), glm::vec3(0.0f, 90.0f, 0.0));
