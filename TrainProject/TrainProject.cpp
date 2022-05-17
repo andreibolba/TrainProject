@@ -435,7 +435,7 @@ void processInput(GLFWwindow* window, bool& day, std::vector<std::string>& faces
 		camera.ProcessKeyboard(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS && cameraLock == false)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS && cameraLock == false)
+	if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS )
 	{
 		day = true;
 		setFaces(day, faces, textureFolder, cubemapTexture);
