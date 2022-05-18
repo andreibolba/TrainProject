@@ -39,12 +39,12 @@ void SetOutsideSound(bool day)
 	if (day)
 	{
 		SoundEngine->play2D("Resources/audio/day.mp3", true);
-		SoundEngine->setSoundVolume(0.6);
+		SoundEngine->setSoundVolume(0.8);
 	}
 	else
 	{
 		SoundEngine->play2D("Resources/audio/night.mp3", true);
-		SoundEngine->setSoundVolume(0.2);
+		SoundEngine->setSoundVolume(0.4);
 	}
 }
 
@@ -52,7 +52,7 @@ void setTrainSound(bool move) {
 	TrainSoundEngine->removeAllSoundSources();
 	if (move) {
 		TrainSoundEngine->play2D("Resources/audio/train.wav", true);
-		TrainSoundEngine->setSoundVolume(0.2);
+		TrainSoundEngine->setSoundVolume(0.9);
 	}
 	else {
 		TrainSoundEngine->removeAllSoundSources();
@@ -60,8 +60,8 @@ void setTrainSound(bool move) {
 	}
 }
 
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1920;
+const unsigned int SCR_HEIGHT = 1080;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window, bool& day, std::vector<std::string>& faces, std::string& textureFolder, unsigned int& cubemapTexture);
@@ -118,7 +118,7 @@ bool canGo = false;
 
 float incrementNumber() {
 	if (trainPosition >= -20.0f)
-		return 0.06f;
+		return 0.20f;
 	if (trainPosition >= -350.5f && trainPosition <= -350.4f && moveTrain == Movement::Move && canGo == false)
 	{
 		moveTrain = Movement::Stop;
@@ -135,9 +135,9 @@ float incrementNumber() {
 	{
 		canGo = false;
 		moveTrain = Movement::Move;
-		return 0.06f;
+		return 0.12f;
 	}
-	return 0.09f;
+	return 0.15f;
 }
 
 void moveTrainFunction() {
